@@ -80,7 +80,7 @@ def create_dataloaders(X_train, y_train, X_valid, y_valid, weights,
     train_ds = TorchDataset(X_train, y_train)
     valid_ds = TorchDataset(X_valid, y_valid)
     if sample_class is not None:
-        need_shuffle = True
+        need_shuffle = False
         sampler = sample_class(train_ds)
     else:
         if isinstance(weights, int):
