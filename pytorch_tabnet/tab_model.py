@@ -131,7 +131,7 @@ class TabModel(BaseEstimator):
 
     def fit(self, X_train, y_train, X_valid=None, y_valid=None, loss_fn=None,
             weights=0, max_epochs=100, patience=10, batch_size=1024,
-            virtual_batch_size=128, num_workers=0, drop_last=False, sampler=None):
+            virtual_batch_size=128, num_workers=0, drop_last=False, sample_class=None):
         """Train a neural network stored in self.network
         Using train_dataloader for training data and
         valid_dataloader for validation.
@@ -177,7 +177,7 @@ class TabModel(BaseEstimator):
                                                                     self.batch_size,
                                                                     self.num_workers,
                                                                     self.drop_last,
-                                                                    sampler)
+                                                                    sample_class=sample_class)
 
         self.init_network(
             input_dim=self.input_dim,
@@ -542,7 +542,7 @@ class TabNetClassifier(TabModel):
             return weights
 
     def construct_loaders(self, X_train, y_train, X_valid, y_valid,
-                          weights, batch_size, num_workers, drop_last, sampler=None):
+                          weights, batch_size, num_workers, drop_last, sample_class=None):
         """
         Returns
         -------
@@ -560,7 +560,7 @@ class TabNetClassifier(TabModel):
                                                                 batch_size,
                                                                 num_workers,
                                                                 drop_last,
-                                                                sampler)
+                                                                sample_class=sample_class)
         return train_dataloader, valid_dataloader
 
     def update_fit_params(self, X_train, y_train, X_valid, y_valid, loss_fn,
@@ -804,7 +804,7 @@ class TabNetClassifier(TabModel):
 class TabNetRegressor(TabModel):
 
     def construct_loaders(self, X_train, y_train, X_valid, y_valid, weights,
-                          batch_size, num_workers, drop_last, sampler=None):
+                          batch_size, num_workers, drop_last, sample_class=None):
         """
         Returns
         -------
@@ -826,7 +826,7 @@ class TabNetRegressor(TabModel):
                                                                 batch_size,
                                                                 num_workers,
                                                                 drop_last,
-                                                                sampler)
+                                                                sample_class=sample_class)
         return train_dataloader, valid_dataloader
 
     def update_fit_params(self, X_train, y_train, X_valid, y_valid, loss_fn,
