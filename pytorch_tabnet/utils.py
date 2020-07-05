@@ -51,7 +51,7 @@ class PredictDataset(Dataset):
 
 
 def create_dataloaders(X_train, y_train, X_valid, y_valid, weights,
-                       batch_size, num_workers, drop_last, sample=None):
+                       batch_size, num_workers, drop_last, sample_class=None):
     """
     Create dataloaders with or wihtout subsampling depending on weights and balanced.
 
@@ -79,8 +79,8 @@ def create_dataloaders(X_train, y_train, X_valid, y_valid, weights,
     
     train_ds = TorchDataset(X_train, y_train)
     valid_ds = TorchDataset(X_valid, y_valid)
-    if sample is not None:
-        sampler = sample(train_ds)
+    if sample_class is not None:
+        sampler = sample_class(train_ds)
     else:
         if isinstance(weights, int):
             if weights == 0:
