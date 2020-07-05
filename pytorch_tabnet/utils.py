@@ -51,7 +51,7 @@ class PredictDataset(Dataset):
 
 
 def create_dataloaders(X_train, y_train, X_valid, y_valid, weights,
-                       batch_size, num_workers, drop_last, sampler=None):
+                       batch_size, num_workers, drop_last, sample=None):
     """
     Create dataloaders with or wihtout subsampling depending on weights and balanced.
 
@@ -76,8 +76,11 @@ def create_dataloaders(X_train, y_train, X_valid, y_valid, weights,
         train_dataloader, valid_dataloader : torch.DataLoader, torch.DataLoader
             Training and validation dataloaders
     """
+    
+    train_ds = TorchDataset(X_train, y_train)
+    valid_ds = TorchDataset(X_valid, y_valid)
     if sample is not None:
-        sampler = sampler
+        sampler = sample(train_ds)
     else:
         if isinstance(weights, int):
             if weights == 0:
@@ -112,14 +115,14 @@ def create_dataloaders(X_train, y_train, X_valid, y_valid, weights,
 
 
 
-    train_dataloader = DataLoader(TorchDataset(X_train, y_train),
+    train_dataloader = DataLoader(train_ds,
                                   batch_size=batch_size,
                                   sampler=sampler,
                                   shuffle=need_shuffle,
                                   num_workers=num_workers,
                                   drop_last=drop_last)
 
-    valid_dataloader = DataLoader(TorchDataset(X_valid, y_valid),
+    valid_dataloader = DataLoader(valid_ds,
                                   batch_size=batch_size,
                                   shuffle=False,
                                   num_workers=num_workers)
